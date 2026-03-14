@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦞 龙虾 AI 股票助手 — 使用指南</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #22263a;
+    --accent: #6c5ce7;
+    --accent2: #00cec9;
+    --text: #e4e6eb;
+    --text2: #8b8fa3;
+    --border: #2d3142;
+    --green: #00b894;
+    --red: #ff6b6b;
+    --orange: #fdcb6e;
+    --blue: #74b9ff;
+    --purple: #6c5ce7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    scroll-behavior: smooth;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+    background: linear-gradient(135deg, #1a1d27 0%, #2d1b69 50%, #1a1d27 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-emoji { font-size: 72px; margin-bottom: 16px; }
+  .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+  .hero h1 span { color: var(--accent); }
+  .hero .subtitle { font-size: 18px; color: var(--text2); margin-bottom: 32px; }
+  .hero .stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+  .hero .stat { text-align: center; }
+  .hero .stat-num { font-size: 32px; font-weight: 700; color: var(--accent2); }
+  .hero .stat-label { font-size: 13px; color: var(--text2); }
+
+  /* ── Quick Start ── */
+  .quick-start {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin: -30px auto 0;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+  .quick-start h3 { color: var(--accent2); margin-bottom: 12px; font-size: 16px; }
+  .quick-start .cmd-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .quick-start .cmd-row:last-child { border-bottom: none; }
+  .quick-start .cmd {
+    background: #0d0f15;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 14px;
+    color: var(--accent2);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .quick-start .cmd:hover { background: var(--accent); color: #fff; }
+  .quick-start .cmd-desc { color: var(--text2); font-size: 14px; }
+
+  /* ── Section ── */
+  section { padding: 60px 0; }
+  section h2 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  section .section-sub { color: var(--text2); margin-bottom: 32px; font-size: 15px; }
+
+  /* ── Feature Cards ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    transition: all .3s;
+    cursor: pointer;
+  }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .feature-card .fc-icon { font-size: 36px; margin-bottom: 12px; }
+  .feature-card h3 { font-size: 18px; margin-bottom: 8px; }
+  .feature-card .fc-desc { color: var(--text2); font-size: 14px; margin-bottom: 16px; }
+  .feature-card .fc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fc-tag {
+    background: rgba(108, 92, 231, 0.15);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  .feature-card .fc-detail {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .feature-card.expanded .fc-detail { display: block; }
+  .feature-card .fc-detail .example {
+    background: #0d0f15;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    cursor: pointer;
+    position: relative;
+  }
+  .feature-card .fc-detail .example:hover::after {
+    content: "点击复制";
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text2); font-size: 12px;
+  }
+  .fc-detail p { margin: 8px 0; color: var(--text2); }
+  .fc-detail strong { color: var(--text); }
+
+  /* ── Examples ── */
+  .examples-list { display: flex; flex-direction: column; gap: 16px; }
+  .example-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .example-item .ex-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .example-item .ex-header:hover { background: var(--card-hover); }
+  .example-item .ex-cmd {
+    background: #0d0f15;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--accent2);
+    cursor: pointer;
+  }
+  .example-item .ex-cmd:hover { background: var(--accent); color: #fff; }
+  .example-item .ex-desc { color: var(--text2); font-size: 14px; flex: 1; }
+  .example-item .ex-arrow { color: var(--text2); transition: transform .3s; }
+  .example-item.expanded .ex-arrow { transform: rotate(90deg); }
+  .example-item .ex-body {
+    display: none;
+    padding: 0 24px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .example-item.expanded .ex-body { display: block; padding-top: 16px; }
+  .ex-body .result-preview {
+    background: #0d0f15;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  /* ── Indicator Table ── */
+  .indicator-section { overflow-x: auto; }
+  .ind-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .ind-table th {
+    background: var(--card);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+  .ind-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ind-table tr:hover td { background: var(--card); }
+  .ind-table .ind-cmd {
+    font-family: monospace;
+    color: var(--accent2);
+    background: rgba(0,206,201,.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .ind-cat {
+    background: var(--card);
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .ind-cat td { padding: 14px 16px; border-bottom: 2px solid var(--border); }
+
+  /* ── FAQ ── */
+  .faq-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 16px 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    transition: background .2s;
+  }
+  .faq-q:hover { background: var(--card-hover); }
+  .faq-a {
+    display: none;
+    padding: 0 24px 16px;
+    color: var(--text2);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .faq-item.expanded .faq-a { display: block; }
+  .faq-item.expanded .faq-q .arrow { transform: rotate(90deg); }
+  .arrow { color: var(--text2); transition: transform .3s; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(15,17,23,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 0 24px;
+  }
+  nav .nav-inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; align-items: center; height: 56px; gap: 32px;
+  }
+  nav .logo { font-weight: 700; font-size: 18px; white-space: nowrap; }
+  nav a {
+    color: var(--text2); text-decoration: none; font-size: 14px;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text2);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--green); color: #fff;
+    padding: 10px 24px; border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    transition: transform .3s; z-index: 200;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Pipeline ── */
+  .pipeline {
+    display: flex; gap: 4px; flex-wrap: wrap; align-items: center;
+    margin: 12px 0;
+  }
+  .pipeline .step {
+    background: rgba(108,92,231,.15);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .pipeline .arrow-r { color: var(--text2); font-size: 14px; }
+
+  /* ── Changelog Timeline ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 11px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--purple));
+  }
+  .tl-entry { position: relative; margin-bottom: 32px; }
+  .tl-entry:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    z-index: 1;
+  }
+  .tl-entry.minor .tl-dot { width: 14px; height: 14px; left: -28px; top: 7px; background: var(--accent2); }
+  .tl-entry.initial .tl-dot { background: var(--purple); width: 26px; height: 26px; left: -34px; top: 2px; }
+  .tl-date {
+    font-size: 13px; color: var(--text2); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tl-version {
+    background: rgba(225,112,85,.2); color: var(--accent);
+    padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  }
+  .tl-entry.minor .tl-version { background: rgba(0,206,201,.15); color: var(--accent2); }
+  .tl-entry.initial .tl-version { background: rgba(108,92,231,.2); color: var(--purple); }
+  .tl-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .tl-items { color: var(--text2); font-size: 14px; line-height: 1.8; }
+  .tl-items li { margin-left: 16px; }
+  .tl-tag {
+    display: inline-block;
+    padding: 1px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px;
+  }
+  .tl-tag.new { background: rgba(0,184,148,.15); color: var(--green); }
+  .tl-tag.improve { background: rgba(116,185,255,.15); color: var(--blue); }
+  .tl-tag.fix { background: rgba(255,107,107,.15); color: var(--red); }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 24px; }
+    .hero .stats { gap: 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+    nav .nav-inner { gap: 16px; }
+    nav a { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">🦞 龙虾</div>
+    <a href="#features">功能</a>
+    <a href="#examples">示例</a>
+    <a href="#indicators">指标字典</a>
+    <a href="#faq">FAQ</a>
+    <a href="#changelog">更新日志</a>
+  </div>
+</nav>
+
+<!-- ══ Hero ══ -->
+<div class="hero" style="padding-top:120px;">
+  <div class="container">
+    <div class="hero-emoji">🦞</div>
+    <h1>龙虾 <span>AI 股票助手</span></h1>
+    <p class="subtitle">飞书群内 @龙虾 即可使用 · 自然语言交互 · 多维度智能分析</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">核心功能</div></div>
+      <div class="stat"><div class="stat-num">150+</div><div class="stat-label">技术指标</div></div>
+      <div class="stat"><div class="stat-num">30+</div><div class="stat-label">策略条件</div></div>
+      <div class="stat"><div class="stat-num">17</div><div class="stat-label">分析步骤</div></div>
+      <div class="stat"><div class="stat-num">11</div><div class="stat-label">AI智能体</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Quick Start ══ -->
+<div class="container">
+  <div class="quick-start">
+    <h3>⚡ 快速开始 — 在飞书群里发送：</h3>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 贵州茅台</span>
+      <span class="cmd-desc">说股票名就能分析</span>
+    </div>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 回测 600519</span>
+      <span class="cmd-desc">AI自动生成最优策略</span>
+    </div>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 热门</span>
+      <span class="cmd-desc">今日最火股票Top10</span>
+    </div>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 市场怎么样</span>
+      <span class="cmd-desc">市场全景 + 人性周期</span>
+    </div>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 记账 买入 600519 1800 100股</span>
+      <span class="cmd-desc">记录交易 + 自动关联市场</span>
+    </div>
+    <div class="cmd-row">
+      <span class="cmd" onclick="copyCmd(this)">@龙虾 复盘</span>
+      <span class="cmd-desc">交易诊断 + 改进建议</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Features ══ -->
+<section id="features">
+  <div class="container">
+    <h2>🎯 核心功能</h2>
+    <p class="section-sub">点击卡片查看详情和使用示例</p>
+
+    <div class="features-grid">
+      <!-- 1. 股票分析 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">📊</div>
+        <h3>股票分析</h3>
+        <div class="fc-desc">17步分析流水线 × 11个AI智能体 × 150+技术指标，从技术面到资金面全方位扫描</div>
+        <div class="fc-tags">
+          <span class="fc-tag">17步流水线</span>
+          <span class="fc-tag">11智能体</span>
+          <span class="fc-tag">150+指标</span>
+        </div>
+        <div class="fc-detail">
+          <strong>触发方式：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 分析 600519</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 贵州茅台</div>
+          <p>直接说股票名或代码即可，不需要"分析"前缀也行</p>
+
+          <strong>分析流水线：</strong>
+          <div class="pipeline">
+            <span class="step">1.数据获取</span><span class="arrow-r">→</span>
+            <span class="step">2.均线系统</span><span class="arrow-r">→</span>
+            <span class="step">3.MACD</span><span class="arrow-r">→</span>
+            <span class="step">4.KDJ</span><span class="arrow-r">→</span>
+            <span class="step">5.RSI</span><span class="arrow-r">→</span>
+            <span class="step">6.布林带</span><span class="arrow-r">→</span>
+            <span class="step">7.成交量</span><span class="arrow-r">→</span>
+            <span class="step">8.资金流</span><span class="arrow-r">→</span>
+            <span class="step">9.筹码分布</span><span class="arrow-r">→</span>
+            <span class="step">10.形态识别</span><span class="arrow-r">→</span>
+            <span class="step">11.支撑压力</span><span class="arrow-r">→</span>
+            <span class="step">12.趋势强度</span><span class="arrow-r">→</span>
+            <span class="step">13.波动分析</span><span class="arrow-r">→</span>
+            <span class="step">14.多周期</span><span class="arrow-r">→</span>
+            <span class="step">15.综合评分</span><span class="arrow-r">→</span>
+            <span class="step">16.AI研判</span><span class="arrow-r">→</span>
+            <span class="step">17.生成报告</span>
+          </div>
+          <p><strong>输出内容</strong>：多空信号、支撑/压力位、趋势评级、资金动向、AI综合研判</p>
+        </div>
+      </div>
+
+      <!-- 2. AI回测 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">🧠</div>
+        <h3>AI 多维回测</h3>
+        <div class="fc-desc">AI分析股票特征，自动生成13个多维组合策略，Walk-forward验证 + Monte Carlo模拟</div>
+        <div class="fc-tags">
+          <span class="fc-tag">多维组合</span>
+          <span class="fc-tag">Walk-forward</span>
+          <span class="fc-tag">Monte Carlo</span>
+        </div>
+        <div class="fc-detail">
+          <strong>触发方式：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600519</div>
+          <p>AI 自动执行 6 步流程：</p>
+          <div class="pipeline">
+            <span class="step">1.分析特征</span><span class="arrow-r">→</span>
+            <span class="step">2.生成13组合</span><span class="arrow-r">→</span>
+            <span class="step">3.全量回测</span><span class="arrow-r">→</span>
+            <span class="step">4.Walk-forward</span><span class="arrow-r">→</span>
+            <span class="step">5.Monte Carlo</span><span class="arrow-r">→</span>
+            <span class="step">6.推荐最优</span>
+          </div>
+
+          <strong>股票特征分类：</strong>
+          <p>🔹 <strong>强趋势</strong> → MA金叉+MACD+放量 等趋势追踪组合<br>
+          🔹 <strong>震荡</strong> → RSI超卖+布林下轨+KDJ 等反弹组合<br>
+          🔹 <strong>高波动</strong> → 多重确认+紧止损(5%) 等严格组合<br>
+          🔹 <strong>均值回归</strong> → 布林+RSI+CCI 等回归组合</p>
+
+          <strong>输出指标：</strong>
+          <p>收益率、超额收益、最大回撤、夏普比率、Sortino、Kelly仓位、VaR/CVaR、Omega、Regime分析</p>
+        </div>
+      </div>
+
+      <!-- 3. 自定义回测 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">✏️</div>
+        <h3>自定义策略回测</h3>
+        <div class="fc-desc">用中文描述你的策略，自动编译为可执行代码并回测，支持30+种条件自由组合</div>
+        <div class="fc-tags">
+          <span class="fc-tag">自然语言</span>
+          <span class="fc-tag">30+条件</span>
+          <span class="fc-tag">自由组合</span>
+        </div>
+        <div class="fc-detail">
+          <strong>使用示例：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600036 MACD金叉买入 死叉卖出 止损8%</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 000858 RSI低于30买入 高于70卖出 止损5% 止盈20%</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600519 布林下轨买入 上轨卖出 移动止损5%</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 000001 KDJ金叉 放量 站上20日线 买入 KDJ死叉卖出</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600036 多头排列 MACD零轴上 放量 买入 空头排列卖出 止损10%</div>
+          <p>💡 多个买入条件 = AND逻辑(全部满足才买入)<br>
+          💡 自动识别"买入/卖出"关键词归属条件<br>
+          💡 支持止损、止盈、移动止损等风控</p>
+        </div>
+      </div>
+
+      <!-- 4. 热门扫描 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">🔥</div>
+        <h3>热门股扫描</h3>
+        <div class="fc-desc">东方财富 + 百度热搜 + 人气飙升榜，多源综合排名 Top 10</div>
+        <div class="fc-tags">
+          <span class="fc-tag">多源聚合</span>
+          <span class="fc-tag">实时热度</span>
+          <span class="fc-tag">Top10</span>
+        </div>
+        <div class="fc-detail">
+          <strong>触发方式：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 热门</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 今天什么股票最火</div>
+          <strong>数据来源：</strong>
+          <p>🔸 东方财富热度榜 — 搜索/浏览热度<br>
+          🔸 百度热搜 — 搜索指数<br>
+          🔸 人气飙升榜 — 短期关注度变化</p>
+          <p>⚠️ 热度≠推荐买入，高热度股需结合技术面判断</p>
+        </div>
+      </div>
+
+      <!-- 5. 市场之道 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">☯️</div>
+        <h3>市场之道</h3>
+        <div class="fc-desc">8维数据采集 + AI深度研判，输出市场人性周期定位（恐惧→贪婪）</div>
+        <div class="fc-tags">
+          <span class="fc-tag">8维数据</span>
+          <span class="fc-tag">AI研判</span>
+          <span class="fc-tag">人性周期</span>
+        </div>
+        <div class="fc-detail">
+          <strong>触发方式：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 市场怎么样</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 大盘</div>
+          <strong>8维分析维度：</strong>
+          <p>
+          🌍 全球形势(15%) — 美股/亚太/港股<br>
+          💰 资金链(30%) — 主力净流入/出<br>
+          ⚡ 资金异动(10%) — 板块突变信号<br>
+          📈 估值周期(15%) — PE分位数<br>
+          🌡️ 市场温度(15%) — 涨跌比/强弱股<br>
+          😱 情绪周期(15%) — 涨跌停/连板
+          </p>
+          <strong>输出：</strong>
+          <p>极度恐惧 ← → 极度贪婪 的7级人性周期定位 + 综合得分 + AI洞察</p>
+        </div>
+      </div>
+
+      <!-- 6. 知识科普 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">📚</div>
+        <h3>股票知识科普</h3>
+        <div class="fc-desc">问任何股票相关问题，AI 用通俗易懂的方式解答</div>
+        <div class="fc-tags">
+          <span class="fc-tag">即问即答</span>
+          <span class="fc-tag">通俗解读</span>
+        </div>
+        <div class="fc-detail">
+          <strong>使用示例：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 教我看懂MACD指标</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 什么是布林带</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 夏普比率怎么算的</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 什么是多头排列</div>
+          <p>支持任何股票术语、指标、策略的科普解答</p>
+        </div>
+      </div>
+
+      <!-- 7. 交易记账 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">📝</div>
+        <h3>交易记账</h3>
+        <div class="fc-desc">记录每一笔买卖，系统自动关联市场环境，为复盘提供数据基础</div>
+        <div class="fc-tags">
+          <span class="fc-tag">买卖记录</span>
+          <span class="fc-tag">市场关联</span>
+          <span class="fc-tag">闭环学习</span>
+        </div>
+        <div class="fc-detail">
+          <strong>使用示例：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 记账 买入 600519 1800 100股</div>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 记账 卖出 600519 1900 100股</div>
+          <p>每笔交易自动记录当时的市场之道状态，方便后续复盘分析</p>
+        </div>
+      </div>
+
+      <!-- 8. 交易复盘 -->
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="fc-icon">🔍</div>
+        <h3>交易复盘</h3>
+        <div class="fc-desc">AI分析你的交易记录，诊断4种常见错误模式，给出针对性改进建议</div>
+        <div class="fc-tags">
+          <span class="fc-tag">盈亏分析</span>
+          <span class="fc-tag">错误诊断</span>
+          <span class="fc-tag">改进建议</span>
+        </div>
+        <div class="fc-detail">
+          <strong>触发方式：</strong>
+          <div class="example" onclick="event.stopPropagation();copyCmd(this)">@龙虾 复盘</div>
+          <strong>诊断4种错误模式：</strong>
+          <p>
+          🔸 <strong>恐慌卖出</strong> — 在市场极度恐慌时割肉<br>
+          🔸 <strong>追涨买入</strong> — 在市场过热时追高<br>
+          🔸 <strong>频繁交易</strong> — 手续费侵蚀利润<br>
+          🔸 <strong>未设止损</strong> — 亏损超过合理止损线才卖出
+          </p>
+          <p>输出盈亏总览 + 个股明细 + 错误诊断 + 改进建议</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Examples ══ -->
+<section id="examples" style="background: var(--card);">
+  <div class="container">
+    <h2>💬 完整使用示例</h2>
+    <p class="section-sub">点击命令可直接复制，点击行展开查看返回效果</p>
+
+    <div class="examples-list">
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 贵州茅台</span>
+          <span class="ex-desc">最简分析 — 直接说股票名</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">📊 贵州茅台(600519) 技术分析报告
+
+🔄 均线系统: MA5>MA10>MA20 多头排列 ✅ 做多
+📈 MACD: DIF 12.5 > DEA 10.2, 金叉确认, 红柱放大
+📊 KDJ: K=65.3 D=58.2 J=79.5, 多头区间, 注意超买
+💪 RSI: RSI14=62.5, 中性偏强
+📉 布林带: 价格运行于中轨上方, 上行通道
+💰 资金流: 近5日主力净流入 +2.3亿
+🎯 综合评分: 72/100 — 偏多
+🤖 AI研判: 短期趋势偏强，MACD动量延续...
+          </div>
+        </div>
+      </div>
+
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600519</span>
+          <span class="ex-desc">AI多维回测 — 自动生成最优组合策略</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">🧠 贵州茅台(600519) AI策略优化
+
+📋 回测365天 | 共13个多维组合策略
+   多指标组合×11 + 多智能体×2
+
+🧠 股票特征: 均值回归 | 波动率20% | 自相关-0.087
+
+🏆 Top 1: 超卖放量 (综合54分)
+   策略: RSI<30 + 布林下轨 + 放量 → 买入, RSI>70 → 卖出
+   收益 +10.2% (超额+16.5%) | 回撤 3.4% | 胜率 100%
+   Walk-forward: +8.2% ✅ | Monte Carlo: 100%盈利概率
+
+💡 AI推荐: 超卖放量
+   策略条件: 买入:RSI&lt;30+放量 | 卖出:RSI>70 止损10%
+          </div>
+        </div>
+      </div>
+
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 600036 MACD金叉买入 死叉卖出 止损8%</span>
+          <span class="ex-desc">自定义策略 — 用中文写策略</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">📈 招商银行(600036) 策略回测
+
+策略: 自定义(MACD金叉)
+买入条件: MACD金叉
+卖出条件: MACD死叉
+风控: 止损8%
+
+📊 回测结果 (365天):
+   总收益: +5.2% | 基准: -3.3% | 超额: +8.5%
+   最大回撤: 6.8% | 夏普: 0.45 | 胜率: 60%
+   交易次数: 5笔 | 盈亏比: 1.8
+          </div>
+        </div>
+      </div>
+
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 热门</span>
+          <span class="ex-desc">热门股扫描 — 多源综合排名</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">🔥 今日热门股 Top 10 (多源综合)
+
+🥇 中国平安 — 综合热度 95 | 涨+2.3%
+   东财#3 | 百度#1 | 飙升#5
+🥈 贵州茅台 — 综合热度 88 | 涨+0.8%
+   东财#1 | 百度#5 | 飙升#12
+🥉 比亚迪 — 综合热度 82 | 涨+1.5%
+   东财#7 | 百度#2 | 飙升#3
+...
+          </div>
+        </div>
+      </div>
+
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 市场怎么样</span>
+          <span class="ex-desc">市场之道 — 8维分析 + 人性周期</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">🟡 市场之道: 温和悲观 (-35)
+
+🌍 隔夜外盘: 道琼斯↑+0.7% | 纳斯达克↑+0.4%
+📊 市场全景: 5168只 | 涨1444/跌3624 | 涨停66/跌停8
+💰 资金主攻: 煤炭开采(+18.9亿) | 农化制品(+14.3亿)
+💸 资金撤退: 房屋建设(-5.3亿) | 影视院线(-5.8亿)
+
+评分明细:
+  全球形势(15%) 🔴 -15
+  资金链(30%)   🔴🔴🔴🔴🔴 -55
+  估值周期(15%) 🔴🔴🔴🔴🔴🔴 -60
+  市场温度(15%) 🔴🔴🔴🔴 -40
+  情绪周期(15%) 🟢 +10
+
+恐惧 ← [偏恐惧] → 贪婪
+          </div>
+        </div>
+      </div>
+
+      <div class="example-item" onclick="toggleExample(this)">
+        <div class="ex-header">
+          <span class="ex-cmd" onclick="event.stopPropagation();copyCmd(this)">@龙虾 回测 000858 KDJ金叉 RSI&lt;40 放量 买入 KDJ死叉卖出 止损5%</span>
+          <span class="ex-desc">多条件组合 — AND逻辑共振买入</span>
+          <span class="ex-arrow arrow">▶</span>
+        </div>
+        <div class="ex-body">
+          <div class="result-preview">📈 五粮液(000858) 策略回测
+
+策略: 自定义(KDJ金叉+RSI&lt;40+放量)
+买入条件: KDJ金叉 AND RSI&lt;40 AND 放量 (三条件同时满足)
+卖出条件: KDJ死叉
+风控: 止损5%
+
+💡 多条件组合 = 更严格的筛选 = 更少的交易 + 更高的胜率
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Indicators ══ -->
+<section id="indicators">
+  <div class="container">
+    <h2>📖 策略条件字典</h2>
+    <p class="section-sub">自定义回测支持的所有条件，可自由组合</p>
+
+    <div class="indicator-section">
+      <table class="ind-table">
+        <thead>
+          <tr><th>条件写法</th><th>说明</th><th>示例</th></tr>
+        </thead>
+        <tbody>
+          <!-- 均线 -->
+          <tr class="ind-cat"><td colspan="3">📈 均线 (MA)</td></tr>
+          <tr><td><span class="ind-cmd">MA5上穿MA20</span></td><td>短期均线金叉长期均线</td><td>MA5上穿MA20买入</td></tr>
+          <tr><td><span class="ind-cmd">MA5下穿MA20</span></td><td>短期均线死叉长期均线</td><td>MA5下穿MA20卖出</td></tr>
+          <tr><td><span class="ind-cmd">站上20日线</span></td><td>价格突破N日均线</td><td>站上60日线买入</td></tr>
+          <tr><td><span class="ind-cmd">跌破20日线</span></td><td>价格跌破N日均线</td><td>跌破20日线卖出</td></tr>
+          <tr><td><span class="ind-cmd">多头排列</span></td><td>MA5 > MA10 > MA20</td><td>多头排列买入</td></tr>
+          <tr><td><span class="ind-cmd">空头排列</span></td><td>MA5 < MA10 < MA20</td><td>空头排列卖出</td></tr>
+          <tr><td><span class="ind-cmd">站上年线</span></td><td>价格突破250日线</td><td>站上年线买入</td></tr>
+
+          <!-- MACD -->
+          <tr class="ind-cat"><td colspan="3">📊 MACD</td></tr>
+          <tr><td><span class="ind-cmd">MACD金叉</span></td><td>DIF上穿DEA</td><td>MACD金叉买入</td></tr>
+          <tr><td><span class="ind-cmd">MACD死叉</span></td><td>DIF下穿DEA</td><td>MACD死叉卖出</td></tr>
+          <tr><td><span class="ind-cmd">MACD零轴上</span></td><td>DIF在零轴之上</td><td>MACD金叉 MACD零轴上 买入</td></tr>
+          <tr><td><span class="ind-cmd">MACD零轴下</span></td><td>DIF在零轴之下</td><td>MACD零轴下卖出</td></tr>
+
+          <!-- KDJ -->
+          <tr class="ind-cat"><td colspan="3">🔄 KDJ</td></tr>
+          <tr><td><span class="ind-cmd">KDJ金叉</span></td><td>K上穿D</td><td>KDJ金叉买入</td></tr>
+          <tr><td><span class="ind-cmd">KDJ死叉</span></td><td>K下穿D</td><td>KDJ死叉卖出</td></tr>
+          <tr><td><span class="ind-cmd">KDJ超卖</span></td><td>K值 < 20</td><td>KDJ超卖买入</td></tr>
+          <tr><td><span class="ind-cmd">KDJ超买</span></td><td>K值 > 80</td><td>KDJ超买卖出</td></tr>
+          <tr><td><span class="ind-cmd">K<30</span></td><td>K值低于阈值</td><td>K<30买入</td></tr>
+
+          <!-- RSI -->
+          <tr class="ind-cat"><td colspan="3">💪 RSI</td></tr>
+          <tr><td><span class="ind-cmd">RSI<30</span></td><td>超卖信号</td><td>RSI<30买入</td></tr>
+          <tr><td><span class="ind-cmd">RSI>70</span></td><td>超买信号</td><td>RSI>70卖出</td></tr>
+          <tr><td><span class="ind-cmd">RSI超卖</span></td><td>RSI < 30</td><td>RSI超卖买入</td></tr>
+          <tr><td><span class="ind-cmd">RSI超买</span></td><td>RSI > 70</td><td>RSI超买卖出</td></tr>
+
+          <!-- 布林带 -->
+          <tr class="ind-cat"><td colspan="3">📉 布林带 (Bollinger)</td></tr>
+          <tr><td><span class="ind-cmd">布林下轨</span></td><td>价格触及下轨</td><td>布林下轨买入</td></tr>
+          <tr><td><span class="ind-cmd">布林上轨</span></td><td>价格触及上轨</td><td>布林上轨卖出</td></tr>
+          <tr><td><span class="ind-cmd">布林收窄</span></td><td>带宽收缩 < 5%</td><td>布林收窄 放量 买入</td></tr>
+
+          <!-- CCI -->
+          <tr class="ind-cat"><td colspan="3">🎯 CCI</td></tr>
+          <tr><td><span class="ind-cmd">CCI<-100</span></td><td>超卖区域</td><td>CCI<-100买入</td></tr>
+          <tr><td><span class="ind-cmd">CCI>100</span></td><td>超买区域</td><td>CCI>100卖出</td></tr>
+
+          <!-- 成交量 -->
+          <tr class="ind-cat"><td colspan="3">📦 成交量</td></tr>
+          <tr><td><span class="ind-cmd">放量</span></td><td>量比 > 1.5</td><td>MACD金叉 放量 买入</td></tr>
+          <tr><td><span class="ind-cmd">缩量</span></td><td>量比 < 0.7</td><td>布林下轨 缩量 买入</td></tr>
+          <tr><td><span class="ind-cmd">量比>2</span></td><td>自定义量比阈值</td><td>量比>2 买入</td></tr>
+
+          <!-- 其他 -->
+          <tr class="ind-cat"><td colspan="3">🔧 其他指标</td></tr>
+          <tr><td><span class="ind-cmd">ADX>25</span></td><td>趋势强度足够</td><td>MACD金叉 ADX>25 买入</td></tr>
+          <tr><td><span class="ind-cmd">OBV上升</span></td><td>OBV趋势向上</td><td>OBV上升买入</td></tr>
+          <tr><td><span class="ind-cmd">SuperTrend多</span></td><td>SuperTrend转多</td><td>SuperTrend多买入</td></tr>
+          <tr><td><span class="ind-cmd">SAR多</span></td><td>SAR转多</td><td>SAR多买入</td></tr>
+          <tr><td><span class="ind-cmd">涨幅>3%</span></td><td>当日涨幅</td><td>涨幅>3%买入</td></tr>
+
+          <!-- 风控 -->
+          <tr class="ind-cat"><td colspan="3">🛡️ 风控参数</td></tr>
+          <tr><td><span class="ind-cmd">止损8%</span></td><td>亏损8%自动卖出</td><td>MACD金叉买入 死叉卖出 止损8%</td></tr>
+          <tr><td><span class="ind-cmd">止盈20%</span></td><td>盈利20%自动卖出</td><td>RSI<30买入 止损5% 止盈20%</td></tr>
+          <tr><td><span class="ind-cmd">移动止损5%</span></td><td>从最高点回撤5%卖出</td><td>布林下轨买入 移动止损5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section id="faq" style="background: var(--card);">
+  <div class="container">
+    <h2>❓ 常见问题</h2>
+    <p class="section-sub"></p>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">怎么触发龙虾？<span class="arrow">▶</span></div>
+      <div class="faq-a">在飞书群里 @龙虾 加上你的问题即可。直接说股票名(如"贵州茅台")、说代码(如"600519")、或带功能词(如"分析 600519"、"回测 600519")都可以。</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">AI回测和自定义回测有什么区别？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        <strong>AI回测</strong>（@龙虾 回测 600519）：AI先分析股票特征（趋势/震荡/高波动/均值回归），然后自动生成13个针对性的多维组合策略，全量回测后推荐最优。适合不知道用什么策略的情况。<br><br>
+        <strong>自定义回测</strong>（@龙虾 回测 600519 MACD金叉买入 死叉卖出 止损8%）：你指定买卖条件，系统只执行你的策略。适合验证特定的交易想法。
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">多个买入条件是什么关系？<span class="arrow">▶</span></div>
+      <div class="faq-a">AND关系（全部满足才买入）。比如"MACD金叉 KDJ金叉 放量 买入"需要三个条件同时成立。条件越多越严格，交易次数越少但胜率通常更高。</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">回测结果可靠吗？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        回测使用真实历史数据，结果反映的是"如果过去一年按这个策略操作的表现"。AI回测额外提供：<br>
+        • <strong>Walk-forward验证</strong>：用前70%数据训练，后30%验证，检测过拟合<br>
+        • <strong>Monte Carlo模拟</strong>：2000次随机模拟，给出盈利概率<br>
+        • <strong>Regime分析</strong>：分别统计牛/熊/震荡市的表现<br><br>
+        ⚠️ 但过去表现不代表未来，仅供参考。
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">市场之道的分数怎么看？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        综合得分范围 -100 到 +100：<br>
+        🟢 +60~+100 极度贪婪（可能过热，注意风险）<br>
+        🟢 +20~+60 偏贪婪/温和乐观<br>
+        🟡 -20~+20 中性<br>
+        🔴 -60~-20 偏恐惧/温和悲观<br>
+        🔴 -100~-60 极度恐惧（可能超跌，关注机会）<br><br>
+        道不是预测涨跌，而是理解市场所处的人性周期。
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">高价股回测显示0笔交易？<span class="arrow">▶</span></div>
+      <div class="faq-a">默认资金10万，A股最少买1手(100股)。如果股价超过1000元（如茅台~1500元），需要15万以上。系统会自动提示并建议增加资金。</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">回测报告里的"仓位建议"和"风险真相"是什么？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        这是交易教练模式的核心功能：<br>
+        • <strong>风险真相</strong>：用具体金额（如"亏损¥6,800"）代替抽象百分比，让你直观感受最坏情况<br>
+        • <strong>仓位建议</strong>：基于Kelly公式计算最优仓位（实盘建议1/4 Kelly），告诉你"10万本金应该买多少"<br>
+        • <strong>市场熔断</strong>：市场之道得分过低时，自动在报告顶部显示预警，建议降低仓位或空仓<br>
+        • <strong>灵魂拷问</strong>：连续亏损3次以上时，直接问你"能不能承受"，帮你管住手<br><br>
+        目的是让你先看风险，再看收益，避免被漂亮的回测数据迷惑。
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">热门股的"反FOMO警告"是什么？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        当某只股票同时登顶东财和百度热搜前10时，系统会自动触发反FOMO提醒。历史统计显示，这种极高热度的股票短期回调概率较高。系统会提示你"盈亏比极差，如果一定要买请设5%硬止损"，帮你避免情绪化追高。
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">记账和复盘怎么用？<span class="arrow">▶</span></div>
+      <div class="faq-a">
+        <strong>记账</strong>：每次买卖后发 <code>@龙虾 记账 买入/卖出 代码 价格 数量</code>，系统自动记录并关联当时的市场环境。<br><br>
+        <strong>复盘</strong>：定期发 <code>@龙虾 复盘</code>，系统分析你最近90天的交易记录，诊断4种常见错误模式（恐慌卖出、追涨买入、频繁交易、未设止损），并给出针对性改进建议。真正赚钱的交易员都是在复盘中成长的。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Changelog ══ -->
+<section id="changelog">
+  <div class="container">
+    <h2>📜 更新日志</h2>
+    <p class="section-sub">功能进化时间表 — 记录每一次成长</p>
+
+    <div class="timeline">
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-14 <span class="tl-version">v1.3</span></div>
+        <div class="tl-title">队列系统加固</div>
+        <ul class="tl-items">
+          <li>inbox 文件全面改用原子写入（tempfile + os.replace）<span class="tl-tag fix">修复</span></li>
+          <li>修复 inbox 清空竞态条件<span class="tl-tag fix">修复</span></li>
+          <li>进度卡片优化，对数进度条更准确<span class="tl-tag improve">优化</span></li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-13 <span class="tl-version">v1.2.1</span></div>
+        <div class="tl-title">功能指南上线</div>
+        <ul class="tl-items">
+          <li>股票助手使用指南网页上线<span class="tl-tag new">新功能</span></li>
+          <li>GitHub Pages 部署，随时可查阅</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-12 <span class="tl-version">v1.2</span></div>
+        <div class="tl-title">自然语言策略回测</div>
+        <ul class="tl-items">
+          <li>用中文描述策略，自动编译为可执行代码<span class="tl-tag new">新功能</span></li>
+          <li>支持 30+ 种条件自由组合（MA/MACD/KDJ/RSI/布林/CCI/量比等）</li>
+          <li>买入/卖出/止损/止盈/移动止损全覆盖</li>
+          <li>多条件 AND 逻辑共振买入</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-11 <span class="tl-version">v1.1.1</span></div>
+        <div class="tl-title">AI 多维回测</div>
+        <ul class="tl-items">
+          <li>AI 分析股票特征，自动生成 13 组合策略<span class="tl-tag new">新功能</span></li>
+          <li>Walk-forward 验证防止过拟合</li>
+          <li>Monte Carlo 2000 次模拟给出盈利概率</li>
+          <li>Regime 分析（牛/熊/震荡分别统计）</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-11 <span class="tl-version">v1.1</span></div>
+        <div class="tl-title">市场之道 + 热门股扫描</div>
+        <ul class="tl-items">
+          <li>市场之道：5000+ 股票全市场扫描，8 维数据 + AI 研判<span class="tl-tag new">新功能</span></li>
+          <li>恐惧-贪婪 7 级人性周期定位</li>
+          <li>热门股多源扫描（东财 + 百度 + 飙升）Top 10<span class="tl-tag new">新功能</span></li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-10 <span class="tl-version">v1.0.1</span></div>
+        <div class="tl-title">单股深度分析</div>
+        <ul class="tl-items">
+          <li>11 AI 智能体协同分析<span class="tl-tag new">新功能</span></li>
+          <li>150+ 技术指标全方位扫描</li>
+          <li>17 步分析流水线（均线/MACD/KDJ/RSI/布林/资金流/筹码/形态...）</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry initial">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-09 <span class="tl-version">v1.0</span></div>
+        <div class="tl-title">🎉 股票助手上线</div>
+        <ul class="tl-items">
+          <li>飞书群 @龙虾 触发股票分析<span class="tl-tag new">新功能</span></li>
+          <li>AI 智能问答，自然语言交互</li>
+          <li>实时进度卡片反馈（飞书 Hook 系统）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>🦞 龙虾 AI 股票助手 — 飞书群 @龙虾 即可使用</p>
+    <p style="margin-top:8px;">⚠️ 本工具仅供学习交流，不构成投资建议。投资有风险，入市需谨慎。</p>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ 已复制到剪贴板</div>
+
+<script>
+function copyCmd(el) {
+  const text = el.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.textContent = '✅ 已复制: ' + text;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+  });
+}
+
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleExample(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleFaq(el) {
+  el.classList.toggle('expanded');
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
