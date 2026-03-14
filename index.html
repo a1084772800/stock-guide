@@ -18,6 +18,7 @@
     --red: #ff6b6b;
     --orange: #fdcb6e;
     --blue: #74b9ff;
+    --purple: #6c5ce7;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -303,6 +304,47 @@
   }
   .pipeline .arrow-r { color: var(--text2); font-size: 14px; }
 
+  /* ── Changelog Timeline ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 11px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--purple));
+  }
+  .tl-entry { position: relative; margin-bottom: 32px; }
+  .tl-entry:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    z-index: 1;
+  }
+  .tl-entry.minor .tl-dot { width: 14px; height: 14px; left: -28px; top: 7px; background: var(--accent2); }
+  .tl-entry.initial .tl-dot { background: var(--purple); width: 26px; height: 26px; left: -34px; top: 2px; }
+  .tl-date {
+    font-size: 13px; color: var(--text2); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tl-version {
+    background: rgba(225,112,85,.2); color: var(--accent);
+    padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  }
+  .tl-entry.minor .tl-version { background: rgba(0,206,201,.15); color: var(--accent2); }
+  .tl-entry.initial .tl-version { background: rgba(108,92,231,.2); color: var(--purple); }
+  .tl-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .tl-items { color: var(--text2); font-size: 14px; line-height: 1.8; }
+  .tl-items li { margin-left: 16px; }
+  .tl-tag {
+    display: inline-block;
+    padding: 1px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px;
+  }
+  .tl-tag.new { background: rgba(0,184,148,.15); color: var(--green); }
+  .tl-tag.improve { background: rgba(116,185,255,.15); color: var(--blue); }
+  .tl-tag.fix { background: rgba(255,107,107,.15); color: var(--red); }
+
   @media (max-width: 600px) {
     .hero h1 { font-size: 24px; }
     .hero .stats { gap: 20px; }
@@ -321,6 +363,7 @@
     <a href="#examples">示例</a>
     <a href="#indicators">指标字典</a>
     <a href="#faq">FAQ</a>
+    <a href="#changelog">更新日志</a>
   </div>
 </nav>
 
@@ -889,6 +932,94 @@
       <div class="faq-a">
         <strong>记账</strong>：每次买卖后发 <code>@龙虾 记账 买入/卖出 代码 价格 数量</code>，系统自动记录并关联当时的市场环境。<br><br>
         <strong>复盘</strong>：定期发 <code>@龙虾 复盘</code>，系统分析你最近90天的交易记录，诊断4种常见错误模式（恐慌卖出、追涨买入、频繁交易、未设止损），并给出针对性改进建议。真正赚钱的交易员都是在复盘中成长的。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Changelog ══ -->
+<section id="changelog">
+  <div class="container">
+    <h2>📜 更新日志</h2>
+    <p class="section-sub">功能进化时间表 — 记录每一次成长</p>
+
+    <div class="timeline">
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-14 <span class="tl-version">v1.3</span></div>
+        <div class="tl-title">队列系统加固</div>
+        <ul class="tl-items">
+          <li>inbox 文件全面改用原子写入（tempfile + os.replace）<span class="tl-tag fix">修复</span></li>
+          <li>修复 inbox 清空竞态条件<span class="tl-tag fix">修复</span></li>
+          <li>进度卡片优化，对数进度条更准确<span class="tl-tag improve">优化</span></li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-13 <span class="tl-version">v1.2.1</span></div>
+        <div class="tl-title">功能指南上线</div>
+        <ul class="tl-items">
+          <li>股票助手使用指南网页上线<span class="tl-tag new">新功能</span></li>
+          <li>GitHub Pages 部署，随时可查阅</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-12 <span class="tl-version">v1.2</span></div>
+        <div class="tl-title">自然语言策略回测</div>
+        <ul class="tl-items">
+          <li>用中文描述策略，自动编译为可执行代码<span class="tl-tag new">新功能</span></li>
+          <li>支持 30+ 种条件自由组合（MA/MACD/KDJ/RSI/布林/CCI/量比等）</li>
+          <li>买入/卖出/止损/止盈/移动止损全覆盖</li>
+          <li>多条件 AND 逻辑共振买入</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-11 <span class="tl-version">v1.1.1</span></div>
+        <div class="tl-title">AI 多维回测</div>
+        <ul class="tl-items">
+          <li>AI 分析股票特征，自动生成 13 组合策略<span class="tl-tag new">新功能</span></li>
+          <li>Walk-forward 验证防止过拟合</li>
+          <li>Monte Carlo 2000 次模拟给出盈利概率</li>
+          <li>Regime 分析（牛/熊/震荡分别统计）</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-11 <span class="tl-version">v1.1</span></div>
+        <div class="tl-title">市场之道 + 热门股扫描</div>
+        <ul class="tl-items">
+          <li>市场之道：5000+ 股票全市场扫描，8 维数据 + AI 研判<span class="tl-tag new">新功能</span></li>
+          <li>恐惧-贪婪 7 级人性周期定位</li>
+          <li>热门股多源扫描（东财 + 百度 + 飙升）Top 10<span class="tl-tag new">新功能</span></li>
+        </ul>
+      </div>
+
+      <div class="tl-entry minor">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-10 <span class="tl-version">v1.0.1</span></div>
+        <div class="tl-title">单股深度分析</div>
+        <ul class="tl-items">
+          <li>11 AI 智能体协同分析<span class="tl-tag new">新功能</span></li>
+          <li>150+ 技术指标全方位扫描</li>
+          <li>17 步分析流水线（均线/MACD/KDJ/RSI/布林/资金流/筹码/形态...）</li>
+        </ul>
+      </div>
+
+      <div class="tl-entry initial">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026-03-09 <span class="tl-version">v1.0</span></div>
+        <div class="tl-title">🎉 股票助手上线</div>
+        <ul class="tl-items">
+          <li>飞书群 @龙虾 触发股票分析<span class="tl-tag new">新功能</span></li>
+          <li>AI 智能问答，自然语言交互</li>
+          <li>实时进度卡片反馈（飞书 Hook 系统）</li>
+        </ul>
       </div>
     </div>
   </div>
